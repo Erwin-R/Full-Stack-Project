@@ -1,0 +1,25 @@
+server:
+  port: 8080
+  error:
+    include-message: always
+
+spring:
+#creates datasource object to make connections to the database
+  datasource:
+    url: jdbc:postgresql://localhost:5432/customer
+    username: potatochip
+    password: password
+#ddl-auto initiates the database and defines how your database schema is handled
+#hibernate is a java framework and ORM tool used to implement JPA methods/interacting with
+  #different types of databases
+#jdbc allows java programs to connect to PostgreSQL database using database independent java code
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: false
+  main:
+    web-application-type: servlet
