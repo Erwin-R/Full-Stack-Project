@@ -4,7 +4,7 @@ server:
     include-message: always
 
 spring:
-#creates datasource object to make connections to the database
+#creates/instantiates datasource object to make connections to the database
   datasource:
     url: jdbc:postgresql://localhost:5432/customer
     username: potatochip
@@ -15,6 +15,8 @@ spring:
 #jdbc allows java programs to connect to PostgreSQL database using database independent java code
   jpa:
     hibernate:
+      #creates schema then destroys it after program is done executing so getting fresh data at every restart
+      #if we want the data to persist then it would just be "ddl-auto: update"
       ddl-auto: create-drop
     properties:
       hibernate:
