@@ -1,5 +1,7 @@
 package com.potatochip;
 
+import com.github.javafaker.Faker;
+import com.github.javafaker.Name;
 import com.potatochip.customer.Customer;
 import com.potatochip.customer.CustomerRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 @SpringBootApplication
 public class Main {
@@ -23,19 +26,32 @@ public class Main {
     @Bean
     CommandLineRunner commandLineRunner(CustomerRepository customerRepository){
         return args -> {
-            Customer alex = new Customer(
-                    "Alex",
-                    "alex@gmail.com",
-                    21
-            );
-            Customer jamila = new Customer(
-                    "Jamila",
-                    "jamila@gmail.com",
-                    19
-            );
+//            Customer alex = new Customer(
+//                    "Alex",
+//                    "alex@gmail.com",
+//                    21
+//            );
+//            Customer jamila = new Customer(
+//                    "Jamila",
+//                    "jamila@gmail.com",
+//                    19
+//            );
+//
+//            List<Customer> customers = List.of(alex, jamila);
 
-            List<Customer> customers = List.of(alex, jamila);
-            customerRepository.saveAll(customers);
+            Faker faker = new Faker();
+            Random random = new Random();
+            Name name = faker.name();
+            String firstName = name.firstName();
+            String lastName = name.lastName();
+            Customer customer = new Customer(
+                    firstName + " " + lastName,
+//                    faker.internet().emailAddress(),
+                    firstName.toLowerCase() + "." + lastName.toLowerCase() + "@amigoscode.com",
+                    random.nextInt(16, 99)
+
+            );
+            customerRepository.save(customer);
 
 
         };

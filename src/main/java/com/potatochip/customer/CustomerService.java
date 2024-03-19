@@ -14,7 +14,7 @@ public class CustomerService {
     private final CustomerDao customerDao;
 
     //qualifier annotation is used to clarify which bean that implements customerDao we want to use
-    public CustomerService(@Qualifier("jpa") CustomerDao customerDao) {
+    public CustomerService(@Qualifier("jdbc") CustomerDao customerDao) {
         this.customerDao = customerDao;
     }
 
@@ -62,13 +62,11 @@ public class CustomerService {
     public void updateCustomer(Integer customerId, CustomerUpdateRequest updateRequest){
         boolean changes = false;
         Customer customer = getCustomer(customerId);
-
         if(updateRequest.name() != null && !updateRequest.name().equals(customer.getName())){
             customer.setName(updateRequest.name());
             changes = true;
         }
-
-        if(updateRequest.email() != null && updateRequest.email().equals(customer.getEmail())){
+        if(updateRequest.email() != null && !updateRequest.email().equals(customer.getEmail())){
             if(customerDao.existsPersonWithEmail(updateRequest.email())) {
                 throw new DuplicateResourceException(
                         "email already taken"
@@ -77,12 +75,10 @@ public class CustomerService {
             customer.setEmail(updateRequest.email());
             changes = true;
         }
-
         if(updateRequest.age() != null && !updateRequest.age().equals(customer.getAge())){
             customer.setAge(updateRequest.age());
             changes = true;
         }
-
 
         if(!changes){
             throw new RequestValidationException(

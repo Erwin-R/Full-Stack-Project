@@ -17,11 +17,13 @@ spring:
     hibernate:
       #creates schema then destroys it after program is done executing so getting fresh data at every restart
       #if we want the data to persist then it would just be "ddl-auto: update"
-      ddl-auto: create-drop
+      ddl-auto: validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-    show-sql: false
+    show-sql: true
   main:
     web-application-type: servlet
+  flyway:
+    clean-disabled: false
