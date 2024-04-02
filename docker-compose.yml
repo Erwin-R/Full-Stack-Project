@@ -13,7 +13,23 @@ services:
     networks:
       - db
     restart: unless-stopped
-
+  potatochip-api:
+    container_name: potatochip-api
+    image: zer0beans/potatochip-api
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/customer
+    ports:
+      - "8088:8080"
+#    define network so we can talk to our database
+    networks:
+      - db
+  # depends on db so we dont want it to start unless we have database up and running
+    depends_on:
+      - db
+    restart: unless-stopped
+#  this is another way to shorten the command when trying to get the docker network connection
+#    command:
+#      - --spring.datasource.url=jdbc:postgresql://db:5432/customer
 networks:
     db:
       driver: bridge

@@ -151,7 +151,7 @@ class CustomerServiceTest {
 
 
         //Then
-        //verifying that the id is not being changed as we pass it in
+        //verifying that this method is never being called after we throw the exception
         verify(customerDao, never()).deleteCustomerById(id);
     }
     @Test
@@ -176,9 +176,11 @@ class CustomerServiceTest {
                 Customer.class
         );
 
+        //we are verifying that we are running the method with correct argument
         verify(customerDao).updateCustomer(customerArgumentCaptor.capture());
         Customer capturedCustomer = customerArgumentCaptor.getValue();
 
+        //asserting that the customer we passed in is the same one that we got from updateRequest
         assertThat(capturedCustomer.getName()).isEqualTo(updateRequest.name());
         assertThat(capturedCustomer.getEmail()).isEqualTo(updateRequest.email());
         assertThat(capturedCustomer.getAge()).isEqualTo(updateRequest.age());
