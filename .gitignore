@@ -18,6 +18,10 @@ target/
 *.iws
 *.iml
 *.ipr
+**/target/
+**/.idea/
+**/node_modules
+**/.DS_store
 
 ### NetBeans ###
 /nbproject/private/
