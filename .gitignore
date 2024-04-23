@@ -22,6 +22,7 @@ target/
 **/.idea/
 **/node_modules
 **/.DS_store
+**/*.iml
 
 ### NetBeans ###
 /nbproject/private/
