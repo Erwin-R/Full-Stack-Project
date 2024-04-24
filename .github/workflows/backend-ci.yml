@@ -1,0 +1,52 @@
+name: CI - Build Backend
+
+on:
+  pull_request:
+    branches:
+      - main
+    #so any folders that have changes in the backend, we want to run some jobs
+    paths:
+      - backend/**
+
+jobs:
+  #name of job(build)
+  build:
+    runs-on: ubuntu-latest
+    # Service containers to run with `container-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres:16.2
+        # Provide the password for postgres
+        env:
+          POSTGRES_USER: potatochip
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: customer
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          # (Host connection port) : (container port)
+          - 5432:5432
+    defaults:
+      run:
+        #sets working directory to backend which we need to run mvn file since that is where our pom.xml file is.
+        #would not work without this since it would run the maven command in the root folder which does not contain the pom.xml
+        working-directory: ./backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+      #name of the run action(could have also named the other actions but not necessary i.e checkout)
+      - name: Build and run Unit/Integration Tests with Maven
+        #-ntp is for when we download all dependencies and plugins we wont see any logs
+        #-B makes command run in non interactive mode which means it will make command run faster
+        run: mvn -ntp -B verify
