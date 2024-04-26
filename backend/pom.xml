@@ -13,15 +13,18 @@
     <groupId>com.potatochip</groupId>
     <artifactId>potatochip-api</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <organization>
-        <name>potatochip</name>
-        <url>https://potatochip.com</url>
-    </organization>
+<!--    Had these 4 lines of code below before we integrated the build number with CD workflow-->
+<!--    <organization>-->
+<!--        <name>potatochip</name>-->
+<!--        <url>https://potatochip.com</url>-->
+<!--    </organization>-->
 
     <properties>
         <java.version>17</java.version>
 <!--        if docker hub username is different from the name in the organization tag above -->
         <docker.username>zer0beans</docker.username>
+        <docker.image.name>potatochip-api</docker.image.name>
+        <docker.image.tag/>
     </properties>
     <dependencies>
 <!--JDBC driver to let JPA to connect to postgres database-->
@@ -184,7 +187,10 @@
                         </platforms>
                     </from>
                     <to>
-                        <image>docker.io/${docker.username}/${project.artifactId}:${project.version}</image>
+<!--This will basically give us "docker.io/zer0beans/potatochip-api:$<build number we generated>-->
+                        <image>docker.io/${docker.username}/${docker.image.name}:${docker.image.tag}</image>
+<!--                        What we had before we integrated build number and the CD workflow-->
+<!--                        <image>docker.io/${docker.username}/${project.artifactId}:${project.version}</image>-->
 <!--                        <image>docker.io/potatochip/potatochip-api:$1.0-SNAPSHOT</image>-->
                         <tags>
                             <tag>latest</tag>

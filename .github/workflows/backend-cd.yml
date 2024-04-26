@@ -1,0 +1,94 @@
+name: CD - Deploy Backend
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - backend/**
+
+jobs:
+  #name of job
+  deploy:
+    runs-on: ubuntu-latest
+    services:
+      #name of service
+      postgres:
+        image: postgres:16.2
+        env:
+          POSTGRES_USER: potatochip
+          POSTGRES_PASSWORD: password
+          #creates the customer database for us instead of having to bash into container
+          POSTGRES_DB: customer
+          ports:
+            5432:5432
+          option:
+            --health-cmd pg_ready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+    #by default the working directory of this workflow would be root of project, Full-Stack-Project, but we want the commands to run within our backend folder
+    #to change that we add the defaults below
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+      #name of step
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+        #name of step
+      - name: Set Build Number
+        #need to give this step id since other steps will refer to it later
+        id: build-number
+        #So we take the build_number variable and put it inside the github_output environment file so that the variable can
+        #be accessed as an output from this step
+        run: echo "BUILD_NUMBER=$(date '+%d.%m.%Y.%H.%M.%S')" >> $GITHUB_OUTPUT
+      - name: Build Package Push With Maven
+        #we want to include verify since that will run the integration tests
+        #"outputs" in command since there could be multiple outputs so we specify the one output by putting in the variable name
+        #finally you want to invoke jib, from the jib plugins tab on the side bar we can see we have the jib:build goal
+        #this goal will build and push the docker image
+        run: mvn -ntp -B verify -Ddocker.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}} jib:build
+
+      - name: Update Dockerrun.aws.json api image tag with new build number
+        #add the | to make it to where you can run multiple commands
+        run: |
+          echo "Dockerrun.aws.json before updating tag"
+          cat Dockerrun.aws.json
+          sed -i -E 's_(zer0beans/potatochip-api:)([^"]*)_\1'${{steps.build-number.outputs.BUILD_NUMBER}}'_' Dockerrun.aws.json
+          echo "Dockerrun.aws.json after updating tag"
+          cat Dockerrun.aws.json
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v22
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: ${{ secrets.EB_APPLICATION_NAME }}
+          environment_name: ${{ secrets.EB_ENVIRONMENT_NAME }}
+          version_label: ${{ steps.build-number.outputs.BUILD_NUMBER }}
+          version_description: ${{github.SHA}}.
+          region: ${{ secrets.EB_REGION }}
+          #we have to put the full path from root as it does not get the working directory from the default we put above^
+          deployment_package: backend/Dockerrun.aws.json
+      - name: Commit and push Dockerrun.aws.json
+        run: |
+          git configure user.name github-actions
+          git configure user.email github-actions@github.com
+          git add . 
+          git commit -m "Update Dockerrun.aws.json docker image with new tag ${{ steps.build-number.outputs.BUILD_NUMBER }}" 
+          git push
+
+
+
+
