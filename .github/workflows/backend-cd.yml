@@ -21,13 +21,13 @@ jobs:
           POSTGRES_PASSWORD: password
           #creates the customer database for us instead of having to bash into container
           POSTGRES_DB: customer
-          ports:
-            5432:5432
-          option:
-            --health-cmd pg_ready
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 5
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_ready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     #by default the working directory of this workflow would be root of project, Full-Stack-Project, but we want the commands to run within our backend folder
     #to change that we add the defaults below
     defaults:
