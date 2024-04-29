@@ -1,8 +1,10 @@
 package com.potatochip;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-public class PingPongController2 {
+@RestController
+public class PingPongController {
     record PingPong(String result){}
 
     @GetMapping("/ping")
