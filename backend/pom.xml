@@ -24,6 +24,7 @@
 <!--        if docker hub username is different from the name in the organization tag above -->
         <docker.username>zer0beans</docker.username>
         <docker.image.name>potatochip-api</docker.image.name>
+<!--        Docker.image.tag can be self closing since we are populating the value during runtime with -D in cd workflow-->
         <docker.image.tag/>
     </properties>
     <dependencies>
