@@ -1,10 +1,12 @@
 name: CI - Build Backend
 
 on:
+  #defining what event is going to trigger the job
   pull_request:
+    #further defining that the event will be triggered by any pull request made on the same branch
     branches:
       - main
-    #so any folders that have changes in the backend, we want to run some jobs
+    #so any folders that have changes in the backend, we want to run some jobs (trigger event based on changes in the backend)
     paths:
       - backend/**
 
@@ -16,7 +18,7 @@ jobs:
     services:
       # Label used to access the service container
       postgres:
-        # Docker Hub image
+        # Docker Hub image (use same version as in docker-compose.yml/version used for db in Elastic Beanstalk)
         image: postgres:16.2
         # Provide the password for postgres
         env:
@@ -39,7 +41,10 @@ jobs:
         #would not work without this since it would run the maven command in the root folder which does not contain the pom.xml
         working-directory: ./backend
     steps:
+      #By default the checkout(used to navigate between branches) action does checkout on the main branch. Checkouts the code into the runner(server which cpntains
+      # all the software needed to run jobs)
       - uses: actions/checkout@v4
+      #Sets up java and java jdk in the runner and allows for setup and caching of maven or gradle dependencies
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -48,5 +53,5 @@ jobs:
       #name of the run action(could have also named the other actions but not necessary i.e checkout)
       - name: Build and run Unit/Integration Tests with Maven
         #-ntp is for when we download all dependencies and plugins we wont see any logs
-        #-B makes command run in non interactive mode which means it will make command run faster
+        #-B makes command run in non-interactive mode which means it will make command run faster
         run: mvn -ntp -B verify
