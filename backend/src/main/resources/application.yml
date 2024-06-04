@@ -3,6 +3,10 @@ server:
   error:
     include-message: always
 
+cors:
+  allowed-origins: "*"
+  allowed-methods: "*"
+
 spring:
 #creates/instantiates datasource object to make connections to the database
   datasource:
