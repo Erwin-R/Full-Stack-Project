@@ -46,8 +46,8 @@ public class Main {
             String lastName = name.lastName();
             Customer customer = new Customer(
                     firstName + " " + lastName,
-//                    faker.internet().emailAddress(),
-                    firstName.toLowerCase() + "." + lastName.toLowerCase() + "@amigoscode.com",
+                    faker.internet().emailAddress(),
+//                    firstName.toLowerCase() + "." + lastName.toLowerCase() + "@amigoscode.com",
                     random.nextInt(16, 99)
 
             );
