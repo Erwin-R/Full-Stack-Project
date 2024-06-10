@@ -3,21 +3,16 @@ package com.potatochip.customer;
 import com.potatochip.exception.DuplicateResourceException;
 import com.potatochip.exception.RequestValidationException;
 import com.potatochip.exception.ResourceNotFoundException;
-import org.checkerframework.checker.units.qual.C;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
 
@@ -51,8 +46,8 @@ class CustomerServiceTest {
                 id,
                 "Alex",
                 "alex@gmail.com",
-                19
-        );
+                19,
+                Gender.MALE);
         //the mock (customerDao) does not know what to do once we invoke it so we have to tell it what to do
         when(customerDao.selectCustomerById(id)).thenReturn(Optional.of(customer));
 
@@ -84,7 +79,7 @@ class CustomerServiceTest {
         when(customerDao.existsCustomerWithEmail(email)).thenReturn(false);
 
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
-                "alex", email, 19
+                "alex", email, 19, Gender.MALE
         );
         //When
         underTest.addCustomer(request);
@@ -111,7 +106,7 @@ class CustomerServiceTest {
         when(customerDao.existsCustomerWithEmail(email)).thenReturn(true);
 
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
-                "alex", email, 19
+                "alex", email, 19, Gender.MALE
         );
         //When
         assertThatThrownBy(() -> underTest.addCustomer(request))
@@ -159,8 +154,8 @@ class CustomerServiceTest {
         //Given
         int id = 10;
         Customer customer = new Customer(
-                id, "alex", "alex@gmail.com", 19
-        );
+                id, "alex", "alex@gmail.com", 19,
+                Gender.MALE);
         when(customerDao.selectCustomerById(id)).thenReturn(Optional.of(customer));
 
         String newEmail = "alexandro@gmail.com";
@@ -191,8 +186,8 @@ class CustomerServiceTest {
         //Given
         int id = 10;
         Customer customer = new Customer(
-                id, "alex", "alex@gmail.com", 19
-        );
+                id, "alex", "alex@gmail.com", 19,
+                Gender.MALE);
         when(customerDao.selectCustomerById(id)).thenReturn(Optional.of(customer));
 
         CustomerUpdateRequest updateRequest = new CustomerUpdateRequest("Alexandro", null, null);
@@ -218,8 +213,8 @@ class CustomerServiceTest {
         //Given
         int id = 10;
         Customer customer = new Customer(
-                id, "alex", "alex@gmail.com", 19
-        );
+                id, "alex", "alex@gmail.com", 19,
+                Gender.MALE);
         when(customerDao.selectCustomerById(id)).thenReturn(Optional.of(customer));
 
         String newEmail = "alexandro@gmail.com";
@@ -248,8 +243,8 @@ class CustomerServiceTest {
         //Given
         int id = 10;
         Customer customer = new Customer(
-                id, "alex", "alex@gmail.com", 19
-        );
+                id, "alex", "alex@gmail.com", 19,
+                Gender.MALE);
         when(customerDao.selectCustomerById(id)).thenReturn(Optional.of(customer));
 
 
@@ -277,8 +272,8 @@ class CustomerServiceTest {
         //Given
         int id = 10;
         Customer customer = new Customer(
-                id, "alex", "alex@gmail.com", 19
-        );
+                id, "alex", "alex@gmail.com", 19,
+                Gender.MALE);
         when(customerDao.selectCustomerById(id)).thenReturn(Optional.of(customer));
 
         String newEmail = "alexandro@gmail.com";
@@ -301,8 +296,8 @@ class CustomerServiceTest {
         //Given
         int id = 10;
         Customer customer = new Customer(
-                id, "alex", "alex@gmail.com", 19
-        );
+                id, "alex", "alex@gmail.com", 19,
+                Gender.MALE);
         when(customerDao.selectCustomerById(id)).thenReturn(Optional.of(customer));
 
         CustomerUpdateRequest updateRequest = new CustomerUpdateRequest(customer.getName(), customer.getEmail(), customer.getAge());

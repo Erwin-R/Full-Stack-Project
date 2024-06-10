@@ -18,7 +18,7 @@ public class CustomerJDBCDataAccessService implements CustomerDao{
     @Override
     public List<Customer> selectAllCustomers() {
         var sql = """
-               SELECT id, name, email, age
+               SELECT id, name, email, age, gender
                FROM customer
                 """;
 //        How we did it before we made the CustomerRowMapper class
@@ -39,7 +39,7 @@ public class CustomerJDBCDataAccessService implements CustomerDao{
     @Override
     public Optional<Customer> selectCustomerById(Integer id) {
         var sql = """
-                SELECT id, name, email, age
+                SELECT id, name, email, age, gender
                 FROM customer
                 WHERE id = ?
                 """;
@@ -53,8 +53,8 @@ public class CustomerJDBCDataAccessService implements CustomerDao{
     @Override
     public void insertCustomer(Customer customer) {
         var sql = """
-                INSERT INTO customer(name, email, age)
-                VALUES (?, ?, ?)
+                INSERT INTO customer(name, email, age, gender)
+                VALUES (?, ?, ?, ?)
                 """;
 
 //      update returns the number of rows affected
@@ -62,7 +62,9 @@ public class CustomerJDBCDataAccessService implements CustomerDao{
                 sql,
                 customer.getName(),
                 customer.getEmail(),
-                customer.getAge()
+                customer.getAge(),
+//                Since gender is of Enum datatype must use .name() to convert to string
+                customer.getGender().name()
         );
         System.out.println("jdbcTemplate.update = " + result);
     }

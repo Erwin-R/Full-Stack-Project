@@ -8,11 +8,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.ApplicationContext;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+
 //DataJpaTest is only loading the essential components we need to run test as opposed to all the beans in the application context
 //AutoConfigureTestDatabase allows us to change the Test database. In this situation we replace the Autoconfiguration from our regular database to none so we can
 //allow the test class to inherit the class which loads our test container
@@ -47,8 +46,8 @@ class CustomerRepositoryTest extends AbstractTestContainers {
         Customer customer = new Customer(
                 FAKER.name().fullName(),
                 email,
-                20
-        );
+                20,
+                Gender.MALE);
         underTest.save(customer);
 
         //When
@@ -77,8 +76,8 @@ class CustomerRepositoryTest extends AbstractTestContainers {
         Customer customer = new Customer(
                 FAKER.name().fullName(),
                 email,
-                20
-        );
+                20,
+                Gender.MALE);
         underTest.save(customer);
 
         int id = underTest.findAll().stream()

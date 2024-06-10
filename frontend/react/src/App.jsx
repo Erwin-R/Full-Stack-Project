@@ -20,7 +20,7 @@ const App = () => {
             }).finally(() => {
                 setLoading(false);
             })
-        })
+        }, 1500)
     }, [])
 
     //displaying the load bar while we are loading the customers
@@ -55,7 +55,10 @@ const App = () => {
                          <WrapItem key={index}>
                             {/* using spread so we don't have to pass each C value such as c.name, c.gender, etc. */}
                             {/* instead we are going to do this in the card.jsx file*/}
-                            <CardWithImage {...customer}/>
+                            <CardWithImage
+                                {...customer}
+                                imageNumber={index}
+                            />
                         </WrapItem>
                     ))
                 }

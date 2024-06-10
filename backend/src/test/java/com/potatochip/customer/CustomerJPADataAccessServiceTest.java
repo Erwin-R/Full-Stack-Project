@@ -1,17 +1,12 @@
 package com.potatochip.customer;
 
 import com.github.javafaker.Faker;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class CustomerJPADataAccessServiceTest {
@@ -60,8 +55,8 @@ class CustomerJPADataAccessServiceTest {
                 1,
                 "Ali",
                 "ali@gmail.com",
-                2
-        );
+                2,
+                Gender.MALE);
         //When
         underTest.insertCustomer(customer);
         //Then
@@ -105,8 +100,8 @@ class CustomerJPADataAccessServiceTest {
                 1,
                 "Ali",
                 "ali@gmail.com",
-                2
-        );
+                2,
+                Gender.MALE);
         //When
         underTest.updateCustomer(customer);
         //Then
