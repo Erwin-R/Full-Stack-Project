@@ -3,7 +3,7 @@
   "containerDefinitions": [
     {
       "name": "potatochip-api",
-      "image": "zer0beans/potatochip-api:07.06.2024.18.58.30",
+      "image": "zer0beans/potatochip-api:10.06.2024.04.00.48",
       "essential": true,
       "memory": 512,
       "portMappings": [
