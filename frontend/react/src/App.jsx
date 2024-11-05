@@ -14,27 +14,25 @@ const App = () => {
     const [err, setError] = useState("");
 
 
-    const fetchCustomers = () =>{
-        setLoading(true)
-        setTimeout(() => {
-            getCustomers().then(res => {
-                setCustomers(res.data)
-            }).catch(err =>{
-                console.log(err)
-                setError(err.response.data.message)
-                errorNotification(
-                    //both of these are derived from the JSON object we get back from the error on webpage
-                    err.code,
-                    err.response.data.message
-                )
-            }).finally(() => {
+    const fetchCustomers = ()=> {
+        setLoading(true);
+        getCustomers().then(res => {
+            console.log(res.data)
+            setCustomers(res.data)
+        }).catch(err => {
+            setError(err.response.data.message)
+            errorNotification(
+                //both of these are derived from the JSON object we get back from the error on webpage
+                err.code,
+                err.response.data.message
+            )
+        }).finally(() => {
                 setLoading(false);
-            })
-        }, 400)
+        })
     }
 
     useEffect(() => {
-        fetchCustomers()
+        fetchCustomers();
     }, [])
 
     //displaying the load bar while we are loading the customers
@@ -81,8 +79,7 @@ const App = () => {
                 fetchCustomers={fetchCustomers}
             />
             <Wrap justify={"center"} spacing={"30px"}>
-                {
-                    customers.map((customer, index) =>(
+                {customers.map((customer, index) => (
                          <WrapItem key={index}>
                             {/* using spread so we don't have to pass each C value such as c.name, c.gender, etc. */}
                             {/* instead we are going to do this in the card.jsx file*/}
@@ -92,8 +89,7 @@ const App = () => {
                                 fetchCustomers={fetchCustomers}
                             />
                         </WrapItem>
-                    ))
-                }
+                    ))}
             </Wrap>
         </SidebarWithHeader>
     )

@@ -99,7 +99,8 @@ const CreateCustomerForm = ({fetchCustomers}) => {
 
                 {/*
                 here we are destructuring and seeing whether form is valid and submitting
-                wrapped the form like this {({curly brackets to destructure}) => (<Form> component)}
+                wrapped the form like this {({curly brackets to destructure}) => (<Form> component)} so this is a function that
+                lets us return the form
                 */}
                 {({isValid, isSubmitting}) => (
                     <Form>

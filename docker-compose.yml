@@ -27,6 +27,22 @@ services:
     depends_on:
       - db
     restart: unless-stopped
+  potatochip-react:
+    container_name: potatochip-react
+    image: zer0beans/potatochip-react
+    #instead of pulling the image from dockerhub we are going to build it
+    build:
+      #here we are defining the class path of where to find the Dockerfile
+      context: frontend/react
+      args:
+        #this is the port exposing on the host for potatochip-api
+        api_base_url: http://localhost:8088
+    ports:
+      #can be any port, does not have to be 3000
+      - "3000:5173"
+    depends_on:
+      - potatochip-api
+    restart: unless-stopped
 #  this is another way to shorten the command when trying to get the docker network connection
 #    command:
 #      - --spring.datasource.url=jdbc:postgresql://db:5432/customer

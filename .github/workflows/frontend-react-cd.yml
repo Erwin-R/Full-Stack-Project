@@ -1,49 +1,27 @@
-name: CD - Deploy Backend
+name: CD - Deploy React Frontend
 
 on:
-  #this line gives us the ability to trigger the workflow manually without having to push or create a pull request
-  #you can manually trigger the Github action by going to the actions tab in the repository and clicking on the "run workflow" button
   workflow_dispatch:
-  #workflow will be triggered on push to main branch
   push:
     branches:
       - main
-    #observe any changes within the backend folder
     paths:
-      - backend/**
-
+      - frontend/react/**
 jobs:
-  #name of job
+  #name of job(deploy)
   deploy:
     runs-on: ubuntu-latest
-    services:
-      #name of service
-      postgres:
-        image: postgres:16.2
-        env:
-          POSTGRES_USER: potatochip
-          POSTGRES_PASSWORD: password
-          #creates the customer database for us instead of having to bash into container
-          POSTGRES_DB: customer
-        ports:
-          - 5432:5432
-        options:
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    #by default the working directory of this workflow would be root of project, Full-Stack-Project, but we want the commands to run within our backend folder
-    #to change that we add the defaults below
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: ./frontend/react
 
     steps:
+      #this clones the whole repository (backend & frontend folder plus files)
       - uses: actions/checkout@v4
       - name: Slack commit message and sha
         run: >
           curl -X POST -H 'Content-type: application/json'
-          --data '{"text":":github: https://github.com/Erwin-R/Full-Stack-Project/commit/${{ github.sha }} - ${{ github.event.head_commit.message }}"}' 
+          --data '{"text":":github: ${{github.server_url}}/${{github.repository}}/commit/${{ github.sha }} - ${{ github.event.head_commit.message }}"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Send Slack Message
         # ">" allows you to split one command across multiple lines
@@ -51,20 +29,6 @@ jobs:
           curl -X POST -H 'Content-type: application/json'
           --data '{"text":"Deployment started :progress_bar: :fingerscrossed:"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'maven'
-      #name of step
-      #We need this step because once we get to mvn verify it will push the image to dockerhub, so we need to login to docker hub
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          #We create secrets with these exact values (i.e DOCKERHUB_USERNAME etc.) within our github repo settings
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
-        #name of step
       - name: Set Build Number
         #need to give this step id since other steps will refer to it later
         id: build-number
@@ -72,37 +36,45 @@ jobs:
         #So we take the build_number variable and put it inside the github_output environment file so that the variable can
         #be accessed as an output from this step. This is how you export a value from any step
         run: echo "BUILD_NUMBER=$(date '+%d.%m.%Y.%H.%M.%S')" >> $GITHUB_OUTPUT
-      - name: Send Slack Message
-        run: >
-          curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":":maven: Building with Maven"}' 
-          ${{ secrets.SLACK_WEBHOOK_URL }}
-      - name: Build Package Push With Maven
-        #we want to include verify since that will run the integration tests and create the jar file
-        #"outputs" in command since there could be multiple outputs so we specify the one output by putting in the variable name
-        #finally you want to invoke jib, from the jib plugins tab on the side bar we can see we have the jib:build goal
-        #this goal will build and push the docker image
-        #-D allows us to declare a variable and give it a value which will then be inputed to the pom.xml. In this case we are give the variable "docker.image.tag" a build number
-        run: mvn -ntp -B verify -Ddocker.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}} jib:build
+
+        #we must login to docker hub before we can build image
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          #We create secrets with these exact values (i.e DOCKERHUB_USERNAME etc.) within our github repo settings
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+
+      - name: Docker Build and push
+        run: |
+          chmod +x ../../.ci/build-publish.sh
+          USERNAME=zer0beans \ 
+          REPO=potatochip-react \
+          TAG=${{ steps.build-number.outputs.BUILD_NUMBER }} \ 
+          ../../.ci/build-publish.sh . \
+            --build-arg api_base_url=http://full-stack-api-env.eba-iw87wnt8.us-east-2.elasticbeanstalk.com:8080
 
       - name: Send Slack Message
         run: >
           curl -X POST -H 'Content-type: application/json' 
           --data '{"text":":docker: Image tag:${{steps.build-number.outputs.BUILD_NUMBER}} pushed to https://hub.docker.com/repository/docker/zer0beans/potatochip-api"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
-      - name: Update Dockerrun.aws.json api image tag with new build number
-        #add the | to make it to where you can run multiple commands
+
+      - name: Update Dockerrun.aws.json react image tag with new build number
+        #add the | to make it to where you can run multiple commands one after another
         run: |
           echo "Dockerrun.aws.json before updating tag"
           cat ../Dockerrun.aws.json
-          sed -i -E 's_(zer0beans/potatochip-api:)([^"]*)_\1'${{steps.build-number.outputs.BUILD_NUMBER}}'_' ../Dockerrun.aws.json
+          sed -i -E 's_(zer0beans/potatochip-react:)([^"]*)_\1'${{steps.build-number.outputs.BUILD_NUMBER}}'_' ../../Dockerrun.aws.json
           echo "Dockerrun.aws.json after updating tag"
-          cat ../Dockerrun.aws.json
+          cat ../../Dockerrun.aws.json
+
       - name: Send Slack Message
         run: >
           curl -X POST -H 'Content-type: application/json' 
           --data '{"text":":aws: Starting deployment to Elastic Beanstalk"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
+
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v22
         with:
@@ -116,30 +88,33 @@ jobs:
           region: ${{ secrets.EB_REGION }}
           #we have to put the full path from root as it does not get the working directory from the default we put above^
           deployment_package: Dockerrun.aws.json
+          wait_for_environment_recovery: 60
+
       - name: Send Slack Message
         run: >
           curl -X POST -H 'Content-type: application/json' 
           --data '{"text":":githubloading: Committing to repo https://github.com/Erwin-R/Full-Stack-Project/"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
+
       - name: Commit and push Dockerrun.aws.json
         #Configuring the username and email to be github-actions and github-actions@github.com respectively (attaching the user to the commit)
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add ../Dockerrun.aws.json 
+          git add ../../Dockerrun.aws.json 
           git commit -m "Update Dockerrun.aws.json docker image with new tag ${{ steps.build-number.outputs.BUILD_NUMBER }}" 
           git push
+
       - name: Send Slack Message
         run: >
           curl -X POST -H 'Content-type: application/json' 
           --data '{"text":"Deployment and commit completed :github-check-mark: :party_blob: - http://full-stack-api-env.eba-iw87wnt8.us-east-2.elasticbeanstalk.com/"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
+
       - name: Send Slack Message
         if: always()
+        # ">" allows you to have multiline commands without having to explicitly put "\" for each new line
         run: >
           curl -X POST -H 'Content-type: application/json' 
           --data '{"text":"Job Status ${{ job.status }}"}' 
           ${{ secrets.SLACK_WEBHOOK_URL }}
-
-
-
