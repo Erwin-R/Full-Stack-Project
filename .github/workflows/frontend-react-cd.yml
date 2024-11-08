@@ -59,7 +59,7 @@ jobs:
         #add the | to make it to where you can run multiple commands one after another
         run: |
           echo "Dockerrun.aws.json before updating tag"
-          cat ../Dockerrun.aws.json
+          cat ../../Dockerrun.aws.json
           sed -i -E 's_(zer0beans/potatochip-react:)([^"]*)_\1'${{steps.build-number.outputs.BUILD_NUMBER}}'_' ../../Dockerrun.aws.json
           echo "Dockerrun.aws.json after updating tag"
           cat ../../Dockerrun.aws.json
