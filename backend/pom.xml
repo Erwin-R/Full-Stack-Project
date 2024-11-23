@@ -26,6 +26,7 @@
         <docker.image.name>potatochip-api</docker.image.name>
 <!--        Docker.image.tag can be self closing since we are populating the value during runtime with -D in cd workflow-->
         <docker.image.tag/>
+        <jsonwebtoken.version>0.12.6</jsonwebtoken.version>
     </properties>
     <dependencies>
 <!--JDBC driver to let JPA to connect to postgres database-->
@@ -97,6 +98,34 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jsonwebtoken.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jsonwebtoken.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
+            <version>${jsonwebtoken.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
     </dependencies>

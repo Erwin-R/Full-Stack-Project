@@ -1,5 +1,8 @@
 package com.potatochip.customer;
 
+import com.potatochip.jwt.JWTUtil;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -8,27 +11,34 @@ import java.util.List;
 @RequestMapping("api/v1/customers")
 public class CustomerController {
     private final CustomerService customerService;
+    private final JWTUtil jwtUtil;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, JWTUtil jwtUtil) {
         this.customerService = customerService;
+        this.jwtUtil = jwtUtil;
     }
 
 //    @GetMapping("api/v1/customers")
     @GetMapping
-    public List<Customer> getCustomers(){
+    public List<CustomerDTO> getCustomers(){
         return customerService.getAllCustomers();
     }
 
 //    @GetMapping("api/v1/customers/{customerId}")
     @GetMapping("{customerId}")
-    public Customer getCustomer(@PathVariable("customerId") Integer customerId){
+    public CustomerDTO getCustomer(@PathVariable("customerId") Integer customerId){
         return customerService.getCustomer(customerId);
     }
 
     @PostMapping
-    public void registerCustomer(
+    public ResponseEntity<?> registerCustomer(
             @RequestBody CustomerRegistrationRequest request){
         customerService.addCustomer(request);
+//     first argument is our unique identifier so since we are already making emails unique we use that
+        String jwtToken = jwtUtil.issueToken(request.email(), "ROLE_USER");
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, jwtToken)
+                .build();
     }
 
     @DeleteMapping("{customerId}")

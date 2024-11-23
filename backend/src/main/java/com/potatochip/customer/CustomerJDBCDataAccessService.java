@@ -18,7 +18,7 @@ public class CustomerJDBCDataAccessService implements CustomerDao{
     @Override
     public List<Customer> selectAllCustomers() {
         var sql = """
-               SELECT id, name, email, age, gender
+               SELECT id, name, email, password, age, gender
                FROM customer
                 """;
 //        How we did it before we made the CustomerRowMapper class
@@ -39,7 +39,7 @@ public class CustomerJDBCDataAccessService implements CustomerDao{
     @Override
     public Optional<Customer> selectCustomerById(Integer id) {
         var sql = """
-                SELECT id, name, email, age, gender
+                SELECT id, name, email, password, age, gender
                 FROM customer
                 WHERE id = ?
                 """;
@@ -53,8 +53,8 @@ public class CustomerJDBCDataAccessService implements CustomerDao{
     @Override
     public void insertCustomer(Customer customer) {
         var sql = """
-                INSERT INTO customer(name, email, age, gender)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO customer(name, email, password, age, gender)
+                VALUES (?, ?, ?, ?, ?)
                 """;
 
 //      update returns the number of rows affected
@@ -62,6 +62,7 @@ public class CustomerJDBCDataAccessService implements CustomerDao{
                 sql,
                 customer.getName(),
                 customer.getEmail(),
+                customer.getPassword(),
                 customer.getAge(),
 //                Since gender is of Enum datatype must use .name() to convert to string
                 customer.getGender().name()
@@ -140,5 +141,18 @@ public class CustomerJDBCDataAccessService implements CustomerDao{
         }
 
 
+    }
+
+    @Override
+    public Optional<Customer> selectUserByEmail(String email) {
+        var sql = """
+                SELECT id, name, email, password, age, gender
+                FROM customer
+                WHERE email = ?
+                """;
+
+        return jdbcTemplate.query(sql, customerRowMapper, email)
+                .stream()
+                .findFirst();
     }
 }
