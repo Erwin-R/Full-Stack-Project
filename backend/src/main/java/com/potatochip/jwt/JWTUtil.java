@@ -12,6 +12,7 @@ import java.security.Key;
 import java.util.Date;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Map;
 
 import static java.time.temporal.ChronoUnit.*;
@@ -29,6 +30,12 @@ public class JWTUtil {
 //        this allows us to set extra claims
         return issueToken(subject, Map.of("scopes", scopes));
     }
+
+    public String issueToken(String subject, List<String> scopes){
+//        this allows us to set extra claims
+        return issueToken(subject, Map.of("scopes", scopes));
+    }
+
     public String issueToken(
             String subject,
             Map<String, Object> claims) {
