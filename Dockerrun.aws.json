@@ -15,7 +15,7 @@
     },
     {
       "name": "potatochip-api",
-      "image": "zer0beans/potatochip-api:05.11.2024.20.11.55",
+      "image": "zer0beans/potatochip-api:25.11.2024.05.57.35",
       "essential": true,
       "memory": 512,
       "portMappings": [
