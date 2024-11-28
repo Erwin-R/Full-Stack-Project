@@ -3,7 +3,7 @@
   "containerDefinitions": [
     {
       "name": "potatochip-react",
-      "image": "zer0beans/potatochip-react:28.11.2024.14.21.08",
+      "image": "zer0beans/potatochip-react:28.11.2024.15.29.02",
       "essential": true,
       "memory": 256,
       "portMappings": [
