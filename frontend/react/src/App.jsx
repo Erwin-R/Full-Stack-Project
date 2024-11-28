@@ -3,8 +3,8 @@ import {useState, useEffect} from "react";
 import { Wrap, WrapItem, Spinner, Text } from '@chakra-ui/react'
 import SidebarWithHeader from "./components/shared/Sidebar.jsx";
 import {getCustomers} from "./services/client.js";
-import CardWithImage from "./components/Card.jsx";
-import CreateCustomerDrawer from "./components/CreateCustomerDrawer.jsx";
+import CardWithImage from "./components/customer/Card.jsx";
+import CreateCustomerDrawer from "./components/customer/CreateCustomerDrawer.jsx";
 import {errorNotification} from "./services/notification.js";
 
 const App = () => {

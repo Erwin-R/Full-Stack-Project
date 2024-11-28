@@ -49,7 +49,7 @@ public class Main {
                     firstName + " " + lastName,
                     faker.internet().emailAddress(),
 //                    firstName.toLowerCase() + "." + lastName.toLowerCase() + "@amigoscode.com",
-                    passwordEncoder.encode(UUID.randomUUID().toString()),
+                    passwordEncoder.encode("password"),
                     age,
                     gender
                     );

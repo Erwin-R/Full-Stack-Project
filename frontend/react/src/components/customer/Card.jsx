@@ -18,8 +18,8 @@ import {
     AlertDialogCloseButton, AlertDialogBody, AlertDialogFooter,
 } from '@chakra-ui/react';
 import {useRef} from "react";
-import {deleteCustomer} from "../services/client.js";
-import {errorNotification, successNotification} from "../services/notification.js";
+import {deleteCustomer} from "../../services/client.js";
+import {errorNotification, successNotification} from "../../services/notification.js";
 import UpdateCustomerDrawer from "./UpdateCustomerDrawer.jsx";
 
 //passing in props we are going to use for the customer profile
