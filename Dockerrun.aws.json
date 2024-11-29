@@ -2,32 +2,20 @@
   "AWSEBDockerrunVersion": 2,
   "containerDefinitions": [
     {
-      "name": "potatochip-react",
-      "image": "zer0beans/potatochip-react:28.11.2024.15.29.02",
-      "essential": true,
-      "memory": 256,
-      "portMappings": [
-        {
-          "hostPort": 80,
-          "containerPort": 5173
-        }
-      ]
-    },
-    {
       "name": "potatochip-api",
       "image": "zer0beans/potatochip-api:25.11.2024.06.13.42",
       "essential": true,
       "memory": 512,
       "portMappings": [
         {
-          "hostPort": 8080,
+          "hostPort": 80,
           "containerPort": 8080
         }
       ],
       "environment": [
         {
           "name": "SPRING_DATASOURCE_URL",
-          "value": "jdbc:postgresql://awseb-e-bbifdqj3wt-stack-awsebrdsdatabase-gtz5opgxqp6v.c1ek22igsi7i.us-east-2.rds.amazonaws.com:5432/customer"
+          "value": "jdbc:postgresql://awseb-e-p3wzp9pgmf-stack-awsebrdsdatabase-qgburj9dqidl.c1ek22igsi7i.us-east-2.rds.amazonaws.com:5432/ebdb"
         }
       ]
     }

@@ -18,7 +18,7 @@ management:
 spring:
 #creates/instantiates datasource object to make connections to the database
   datasource:
-    url: jdbc:postgresql://localhost:5432/customer
+    url: jdbc:postgresql://awseb-e-p3wzp9pgmf-stack-awsebrdsdatabase-qgburj9dqidl.c1ek22igsi7i.us-east-2.rds.amazonaws.com:5432/ebdb
     username: potatochip
     password: password
 #ddl-auto initiates the database and defines how your database schema is handled
