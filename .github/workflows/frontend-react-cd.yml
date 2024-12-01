@@ -10,6 +10,7 @@ on:
 jobs:
   #name of job(deploy)
   deploy:
+    if: false
     runs-on: ubuntu-latest
     defaults:
       run:
