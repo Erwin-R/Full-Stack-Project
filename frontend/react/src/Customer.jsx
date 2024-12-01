@@ -7,7 +7,7 @@ import CardWithImage from "./components/customer/Card.jsx";
 import CreateCustomerDrawer from "./components/customer/CreateCustomerDrawer.jsx";
 import {errorNotification} from "./services/notification.js";
 
-const App = () => {
+const Customer = () => {
 
     const [customers, setCustomers] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -137,7 +137,7 @@ const App = () => {
 //         ))}
 //     </div>
 // )
-// function App() {
+// function Customer() {
 //     const [counter, setCounter] = useState(0);
 //     const[isLoading, setIsLoading] = useState(false);
 //
@@ -170,7 +170,7 @@ const App = () => {
 //     )
 // }
 
-export default App
+export default Customer
         // <div>
         //     {/*Component has to be in self closing tag if you want to pass HTML inside of it*/}
         //     <UserProfile
