@@ -20,6 +20,7 @@ public class CustomerJDBCDataAccessService implements CustomerDao{
         var sql = """
                SELECT id, name, email, password, age, gender
                FROM customer
+               LIMIT 1000
                 """;
 //        How we did it before we made the CustomerRowMapper class
 //        RowMapper<Customer> customerRowMapper = (rs, rowNum) -> {
