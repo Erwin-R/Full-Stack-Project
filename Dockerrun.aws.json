@@ -3,7 +3,7 @@
   "containerDefinitions": [
     {
       "name": "potatochip-api",
-      "image": "zer0beans/potatochip-api:29.11.2024.18.17.57",
+      "image": "zer0beans/potatochip-api:13.12.2024.15.23.01",
       "essential": true,
       "memory": 512,
       "portMappings": [
@@ -15,7 +15,7 @@
       "environment": [
         {
           "name": "SPRING_DATASOURCE_URL",
-          "value": "jdbc:postgresql://awseb-e-p3wzp9pgmf-stack-awsebrdsdatabase-qgburj9dqidl.c1ek22igsi7i.us-east-2.rds.amazonaws.com:5432/ebdb"
+          "value": "jdbc:postgresql://awseb-e-m2brksvhp7-stack-awsebrdsdatabase-kf7bcomfixwf.c1ek22igsi7i.us-east-2.rds.amazonaws.com:5432/ebdb"
         }
       ]
     }
