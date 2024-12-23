@@ -19,7 +19,8 @@ public class CustomerRowMapper implements RowMapper<Customer> {
                 rs.getString("password"),
                 rs.getInt("age"),
                 //do this to convert gender string to the enum Gender datatype
-                Gender.valueOf(rs.getString("gender")));
+                Gender.valueOf(rs.getString("gender")),
+                rs.getString("profile_image_id"));
     }
 
 }

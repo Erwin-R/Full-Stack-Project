@@ -1,0 +1,10 @@
+aws:
+  s3:
+    mock: false
+
+spring:
+  #creates/instantiates datasource object to make connections to the database
+  datasource:
+    url: jdbc:postgresql://awseb-e-m2brksvhp7-stack-awsebrdsdatabase-kf7bcomfixwf.c1ek22igsi7i.us-east-2.rds.amazonaws.com:5432/ebdb
+    username: potatochip
+    password: password
