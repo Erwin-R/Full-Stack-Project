@@ -5,6 +5,6 @@ aws:
 spring:
   #creates/instantiates datasource object to make connections to the database
   datasource:
-    url: jdbc:postgresql://awseb-e-m2brksvhp7-stack-awsebrdsdatabase-kf7bcomfixwf.c1ek22igsi7i.us-east-2.rds.amazonaws.com:5432/ebdb
-    username: potatochip
-    password: password
+    url: jdbc-secretsmanager:postgresql://awseb-e-m2brksvhp7-stack-awsebrdsdatabase-kf7bcomfixwf.c1ek22igsi7i.us-east-2.rds.amazonaws.com:5432/ebdb
+    username: test/full-stack/postgres
+    driver-class-name: com.amazonaws.secretsmanager.sql.AWSSecretsManagerPostgreSQLDriver
